@@ -11,10 +11,34 @@ import { RichText } from '@/components/Richtext'
 import { Button } from '@/components/Button'
 import { Footer } from '@/components/Footer'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ slug: string; lang: Locale }>
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config })
+  const locales: Locale[] = ['pt', 'en', 'es']
+  const params: Array<{ slug: string; lang: Locale }> = []
+
+  for (const locale of locales) {
+    const products = await payload.find({
+      collection: 'products',
+      locale,
+      limit: 1000, // Ajuste conforme necessário
+      depth: 0,
+    })
+
+    for (const product of products.docs) {
+      if (product.slug) {
+        params.push({
+          slug: product.slug as string,
+          lang: locale,
+        })
+      }
+    }
+  }
+
+  return params
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -152,7 +176,7 @@ export default async function Page({ params }: PageProps) {
           {doc?.docs[0]?.secaoHarmonizacao?.harmonizacoes?.map((_, idx) => {
             const image = _.imagem as Media
             return (
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2" key={idx}>
                 {image?.url && <Image src={image.url} width={55} height={55} alt="" />}
                 <span className="text-[#CEC4C5] text-lg font-grotesk font-bold">{_.titulo}</span>
               </div>

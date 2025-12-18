@@ -1,9 +1,18 @@
 import { GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
+
 const Download: GlobalConfig = {
   slug: 'download',
   label: 'Página Download',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.download)
+      },
+    ],
   },
   fields: [
     { name: 'titulo', type: 'text', localized: true },

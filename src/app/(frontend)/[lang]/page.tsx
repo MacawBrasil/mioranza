@@ -14,8 +14,6 @@ import { Button } from '@/components/Button'
 import { CarouselBlog } from '@/components/CarouselBlog'
 import { Footer } from '@/components/Footer'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ lang: Locale }>
 }

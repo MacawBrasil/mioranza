@@ -55,20 +55,26 @@ export function FilterCategoryContent({
       }) as ProductSubCategory | undefined
 
       if (selectedSubCategory?.produtos) {
-        // Filtra apenas os produtos que são objetos (não strings/IDs)
-        return selectedSubCategory.produtos.filter(
-          (prod): prod is Product => typeof prod === 'object' && prod !== null,
-        )
+        // Extrai os IDs dos produtos da subcategoria
+        const productIds = selectedSubCategory.produtos
+          .map((prod) => (typeof prod === 'object' && prod !== null ? prod.id : prod))
+          .filter((id): id is string => typeof id === 'string')
+
+        // Busca os produtos completos da lista de produtos já carregados
+        return produtos.filter((prod) => productIds.includes(prod.id))
       }
       return []
     }
 
     // Se não há subcategoria, retorna os produtos da categoria
     if (selectedCategory.produto) {
-      // Filtra apenas os produtos que são objetos (não strings/IDs)
-      return selectedCategory.produto.filter(
-        (prod): prod is Product => typeof prod === 'object' && prod !== null,
-      )
+      // Extrai os IDs dos produtos da categoria
+      const productIds = selectedCategory.produto
+        .map((prod) => (typeof prod === 'object' && prod !== null ? prod.id : prod))
+        .filter((id): id is string => typeof id === 'string')
+
+      // Busca os produtos completos da lista de produtos já carregados
+      return produtos.filter((prod) => productIds.includes(prod.id))
     }
 
     return []

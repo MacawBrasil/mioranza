@@ -1,4 +1,6 @@
 import { Block, GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
+
 const SlidesHero: Block = {
   slug: 'hero', // required
   fields: [
@@ -14,6 +16,13 @@ const Home: GlobalConfig = {
   label: 'Página Home',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.home)
+      },
+    ],
   },
   fields: [
     {

@@ -1,10 +1,18 @@
 import { GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
 
 const Blog: GlobalConfig = {
   slug: 'blog',
   label: 'Página Blog',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.blog)
+      },
+    ],
   },
   fields: [
     {

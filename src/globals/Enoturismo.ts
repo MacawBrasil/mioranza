@@ -1,9 +1,18 @@
 import { GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
+
 const Enoturismo: GlobalConfig = {
   slug: 'enoturismo',
   label: 'Página Enoturismo',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.enoturismo)
+      },
+    ],
   },
   fields: [
     {

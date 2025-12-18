@@ -12,8 +12,6 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { RichText } from '@/components/Richtext'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ lang: Locale }>
 }

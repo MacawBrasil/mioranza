@@ -11,8 +11,6 @@ import { Navbar } from '@/components/Navbar'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@payloadcms/ui'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ lang: Locale }>
 }

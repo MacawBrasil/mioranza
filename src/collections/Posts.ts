@@ -1,5 +1,6 @@
 import { CollectionConfig } from 'payload'
 import { slugField } from '../fields/slug'
+import { revalidateCollection, revalidatePages, globalPaths } from '@/utilities/revalidate'
 
 const Posts: CollectionConfig = {
   slug: 'posts',
@@ -13,6 +14,30 @@ const Posts: CollectionConfig = {
   access: {
     read: () => true,
     create: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, req, operation }) => {
+        // Revalida a página de listagem do blog
+        await revalidateCollection('/blog')
+
+        // Se houver slug, revalida também a página individual
+        if (doc.slug) {
+          await revalidateCollection('/blog', doc.slug as string)
+        }
+
+        // Revalida a home, pois ela também exibe posts
+        await revalidatePages(globalPaths.home)
+      },
+    ],
+    afterDelete: [
+      async ({ doc, req }) => {
+        // Revalida a página de listagem após deletar
+        await revalidateCollection('/blog')
+        // Revalida a home, pois ela também exibe posts
+        await revalidatePages(globalPaths.home)
+      },
+    ],
   },
   fields: [
     {

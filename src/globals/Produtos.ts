@@ -1,9 +1,18 @@
 import { GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
+
 const Produtos: GlobalConfig = {
   slug: 'produtos',
   label: 'Página Produtos',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.produtos)
+      },
+    ],
   },
   fields: [
     {

@@ -1,5 +1,6 @@
 import { slugField } from '@/fields/slug'
 import { CollectionConfig } from 'payload'
+import { revalidateCollection, revalidatePages, globalPaths } from '@/utilities/revalidate'
 
 const Products: CollectionConfig = {
   slug: 'products',
@@ -13,6 +14,30 @@ const Products: CollectionConfig = {
   access: {
     read: () => true,
     create: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, req, operation }) => {
+        // Revalida a página de listagem de produtos
+        await revalidateCollection('/produtos')
+
+        // Se houver slug, revalida também a página individual
+        if (doc.slug) {
+          await revalidateCollection('/produtos', doc.slug as string)
+        }
+
+        // Revalida a home, pois ela também exibe produtos em destaque
+        await revalidatePages(globalPaths.home)
+      },
+    ],
+    afterDelete: [
+      async ({ doc, req }) => {
+        // Revalida a página de listagem após deletar
+        await revalidateCollection('/produtos')
+        // Revalida a home, pois ela também exibe produtos em destaque
+        await revalidatePages(globalPaths.home)
+      },
+    ],
   },
   fields: [
     {

@@ -12,10 +12,34 @@ import config from '@payload-config'
 import { Locale } from '@/utilities/locale'
 import { formatDate } from '@/utilities/FormatDate'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ slug: string; lang: Locale }>
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config })
+  const locales: Locale[] = ['pt', 'en', 'es']
+  const params: Array<{ slug: string; lang: Locale }> = []
+
+  for (const locale of locales) {
+    const posts = await payload.find({
+      collection: 'posts',
+      locale,
+      limit: 1000, // Ajuste conforme necessário
+      depth: 0,
+    })
+
+    for (const post of posts.docs) {
+      if (post.slug) {
+        params.push({
+          slug: post.slug as string,
+          lang: locale,
+        })
+      }
+    }
+  }
+
+  return params
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

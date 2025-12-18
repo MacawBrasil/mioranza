@@ -1,4 +1,6 @@
 import { Block, GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
+
 const EpisodioBlock: Block = {
   slug: 'espisodioBlock', // required
   fields: [
@@ -18,6 +20,13 @@ const Legado: GlobalConfig = {
   label: 'Pagina nosso legado',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.legado)
+      },
+    ],
   },
   fields: [
     { name: 'titulo', type: 'text', localized: true },

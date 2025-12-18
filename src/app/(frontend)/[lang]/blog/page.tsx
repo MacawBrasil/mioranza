@@ -10,8 +10,6 @@ import { Navbar } from '@/components/Navbar'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ lang: Locale }>
 }

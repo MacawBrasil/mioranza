@@ -12,8 +12,6 @@ import { HeaderMobile } from '@/components/HeaderMobile'
 import { RichText } from '@/components/Richtext'
 import { Footer } from '@/components/Footer'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ lang: Locale }>
 }

@@ -1,9 +1,18 @@
 import { GlobalConfig } from 'payload'
+import { revalidatePages, globalPaths } from '@/utilities/revalidate'
+
 const Sobre: GlobalConfig = {
   slug: 'sobre',
   label: 'Página A-Vinicola',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        await revalidatePages(globalPaths.sobre)
+      },
+    ],
   },
   fields: [
     { name: 'titulo', type: 'text', localized: true },
